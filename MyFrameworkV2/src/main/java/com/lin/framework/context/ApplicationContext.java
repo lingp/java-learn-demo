@@ -160,9 +160,9 @@ public class ApplicationContext extends DefaultListableBeanFactory implements Be
                 config.setTargetClass(clazz);
                 config.setTarget(instance);
 
-                if (config.pointCutMatch()) {
-                    instance = createProxy(config).getProxy();
-                }
+//                if (config.pointCutMatch()) { // TODO
+//                    instance = createProxy(config).getProxy();
+//                }
 
                 this.singletonBeanCacheMap.put(beanDefinition.getFactoryBeanName(), instance);
             }
