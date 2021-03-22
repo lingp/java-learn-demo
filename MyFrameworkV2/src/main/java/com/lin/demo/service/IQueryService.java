@@ -1,4 +1,4 @@
-package com.gupaoedu.vip.spring.demo.service;
+package com.lin.demo.service;
 
 /**
  * 查询业务
@@ -6,7 +6,7 @@ package com.gupaoedu.vip.spring.demo.service;
  *
  */
 public interface IQueryService {
-	
+
 	/**
 	 * 查询
 	 */

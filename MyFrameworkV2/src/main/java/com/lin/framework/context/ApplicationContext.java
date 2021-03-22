@@ -3,6 +3,7 @@ package com.lin.framework.context;
 import com.lin.framework.annotation.Autowired;
 import com.lin.framework.annotation.Controller;
 import com.lin.framework.annotation.Service;
+import com.lin.framework.aop.*;
 import com.lin.framework.beans.BeanDefinition;
 import com.lin.framework.beans.BeanWrapper;
 import com.lin.framework.beans.config.BeanPostProcessor;
@@ -13,6 +14,7 @@ import com.lin.framework.core.BeanFactory;
 import java.lang.reflect.Field;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ApplicationContext extends DefaultListableBeanFactory implements BeanFactory {
@@ -154,6 +156,14 @@ public class ApplicationContext extends DefaultListableBeanFactory implements Be
                 Class<?> clazz = Class.forName(className);
                 instance = clazz.newInstance();
 
+                AdviseSupport config = instantionAopConfig(beanDefinition);
+                config.setTargetClass(clazz);
+                config.setTarget(instance);
+
+                if (config.pointCutMatch()) {
+                    instance = createProxy(config).getProxy();
+                }
+
                 this.singletonBeanCacheMap.put(beanDefinition.getFactoryBeanName(), instance);
             }
             return instance;
@@ -163,11 +173,36 @@ public class ApplicationContext extends DefaultListableBeanFactory implements Be
         return null;
     }
 
-
     @Override
     public Object getBean(Class<?> beanClass) throws Exception {
         return getBean(beanClass.getName());
     }
 
+    private AdviseSupport instantionAopConfig(BeanDefinition beanDefinition) {
+        AopConfig config = new AopConfig();
+        config.setPointCut(reader.getConfig().getProperty("pointCut"));
+        config.setAspectClass(reader.getConfig().getProperty("aspectClass"));
+        config.setAspectBefore(reader.getConfig().getProperty("aspectBefore"));
+        config.setAspectAfter(reader.getConfig().getProperty("aspectAfter"));
+        config.setAspectAfterThrow(reader.getConfig().getProperty("aspectAfterThrow"));
+        config.setAspectAfterThrowingName(reader.getConfig().getProperty("aspectAfterThrowingName"));
 
+        return new AdviseSupport(config);
+    }
+
+    private AopProxy createProxy(AdviseSupport config) {
+        Class targetClass = config.getTargetClass();
+        if (targetClass.getInterfaces().length > 0) {
+            return new JdkDynamicAopProxy(config);
+        }
+        return new CglibAopProxy(config);
+    }
+
+    public String[] getBeanDefinitionNames() {
+        return this.beanDefinitionMap.keySet().toArray(new  String[this.beanDefinitionMap.size()]);
+    }
+
+    public Properties getConfig(){
+        return this.reader.getConfig();
+    }
 }

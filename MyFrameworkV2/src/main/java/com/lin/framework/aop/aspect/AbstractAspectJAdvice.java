@@ -2,7 +2,7 @@ package com.lin.framework.aop.aspect;
 
 import java.lang.reflect.Method;
 
-public class AbstractAspectJAdvice {
+public abstract class AbstractAspectJAdvice {
     private Method aspectMethod;
     private Object aspectTarget;
 

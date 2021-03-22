@@ -1,18 +1,19 @@
-package com.gupaoedu.vip.spring.demo.service.impl;
+package com.lin.demo.service.impl;
+
+
+import com.lin.demo.service.IQueryService;
+import com.lin.framework.annotation.Service;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import com.gupaoedu.vip.spring.demo.service.IQueryService;
-import com.gupaoedu.vip.spring.formework.annotation.GPService;
-import lombok.extern.slf4j.Slf4j;
 
 /**
  * 查询业务
  * @author Tom
  *
  */
-@GPService
+@Service
 @Slf4j
 public class QueryService implements IQueryService {
 

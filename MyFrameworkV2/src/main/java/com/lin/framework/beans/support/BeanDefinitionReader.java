@@ -1,6 +1,7 @@
 package com.lin.framework.beans.support;
 
 import com.lin.framework.beans.BeanDefinition;
+import lombok.Data;
 
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.util.Properties;
 /**
  * 对配置文件进行查找，读取，解析
  */
+@Data
 public class BeanDefinitionReader {
     private List<String> registyBeanClasses = new ArrayList<>();
     private Properties config = new Properties();
